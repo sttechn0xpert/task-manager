@@ -45,9 +45,10 @@ function Task({ task, onEditTask }) {
   return (
     <chakra.div
       p="16px"
+      touchAction="none"
+      userSelect="none"
       minH="230px"
       bg={color.cardBg}
-      userSelect="none"
       borderRadius="8px"
       border="1px solid"
       borderColor={color.dividerColor}
@@ -61,6 +62,8 @@ function Task({ task, onEditTask }) {
 
       <chakra.div
         display="flex"
+        touchAction="none"
+        userSelect="none"
         justifyContent="space-between"
         alignItems="flex-start"
         gap="10px"
@@ -96,6 +99,8 @@ function Task({ task, onEditTask }) {
       {/* ================= DESCRIPTION ================= */}
 
       <chakra.p
+        touchAction="none"
+        userSelect="none"
         fontSize="13px"
         fontWeight="500"
         color={color.labelColor}
@@ -120,7 +125,7 @@ function Task({ task, onEditTask }) {
 
       {/* ================= SPACER ================= */}
 
-      <chakra.div flex="1" />
+      <chakra.div flex="1" userSelect="none" touchAction="none" />
 
       {/* ================= ACTIONS ================= */}
 
