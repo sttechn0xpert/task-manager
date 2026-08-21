@@ -2,7 +2,7 @@ import React from "react";
 import { chakra, useColorModeValue } from "@chakra-ui/react";
 import { CONSTANT } from "../utils/constant";
 import { useTasks } from "../common/context/TaskContext";
-import { useColors } from "../common/hooks/color";
+import { useColors } from "../common/hooks/useColor";
 
 function Task({ task, onEditTask }) {
   const color = useColors();

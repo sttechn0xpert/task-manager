@@ -14,7 +14,7 @@ import {
 import { useEffect, useState } from "react";
 import { taskValue } from "../utils/initialValues";
 import { CONSTANT } from "../utils/constant";
-import { useColors } from "../common/hooks/color";
+import { useColors } from "../common/hooks/useColor";
 
 export function CreateTaskModal({ isOpen, onClose, onSave, mode, task }) {
   const [errors, setErrors] = useState({});

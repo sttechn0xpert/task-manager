@@ -32,7 +32,7 @@ export function useColors() {
     // =========================
     // COUNT
     // =========================
-    statusCountBg: useColorModeValue("gray.100", "gray.700"),
+    statusCountBg: useColorModeValue("gray.200", "gray.700"),
 
     statusCountColor: useColorModeValue("gray.700", "gray.200"),
 
@@ -163,5 +163,36 @@ export function useColors() {
 
     actionBorder: useColorModeValue("gray.200", "gray.600"),
     dragItemBg: useColorModeValue("transparent", "transparent"),
+    // =========================
+    // COLUMNS
+    // =========================
+
+    columnBg: useColorModeValue("gray.50", "#1A202C"),
+
+    columnBorder: useColorModeValue("gray.200", "gray.700"),
+
+    columnHoverBorder: useColorModeValue("blue.300", "blue.500"),
+
+    // Status-based column backgrounds
+    pendingColumnBg: useColorModeValue("#f5f1e5", "rgba(255, 181, 71, 0.08)"),
+
+    pendingColumnBorder: useColorModeValue(
+      "#fdd190",
+      "rgba(255, 181, 71, 0.35)",
+    ),
+
+    progressColumnBg: useColorModeValue("#EEF4FF", "rgba(57, 101, 255, 0.08)"),
+
+    progressColumnBorder: useColorModeValue(
+      "#3965FF",
+      "rgba(57, 101, 255, 0.35)",
+    ),
+
+    completedColumnBg: useColorModeValue("#E6FAF5", "rgba(1, 181, 116, 0.08)"),
+
+    completedColumnBorder: useColorModeValue(
+      "#01B574",
+      "rgba(1, 181, 116, 0.35)",
+    ),
   };
 }

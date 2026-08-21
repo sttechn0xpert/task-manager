@@ -27,7 +27,7 @@ import { DraggableItem } from "./components/DraggableItem";
 import { CreateTaskModal } from "./components/CreateTaskModal";
 import useLocalStorage from "./common/hooks/useLocalStorage";
 import { useTasks } from "./common/context/TaskContext";
-import { useColors } from "./common/hooks/color";
+import { useColors } from "./common/hooks/useColor";
 export default function App() {
   const inputRef = useRef(null);
   const colors = useColors();
@@ -285,11 +285,13 @@ export default function App() {
                         md: "4px 10px",
                       }}
                       bg={colors.statusCountBg}
+                      color={colors.statusCountColor}
                       borderRadius="6px"
                       fontSize={{
                         base: "13px",
                         md: "14px",
                       }}
+                      fontWeight="500"
                     >
                       {statusTasks.length}
                     </chakra.h3>

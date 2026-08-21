@@ -9,7 +9,7 @@ import {
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 
 import { CONSTANT } from "../utils/constant";
-import { useColors } from "../common/hooks/color";
+import { useColors } from "../common/hooks/useColor";
 
 function Header({ taskFilter, setTaskFilter, onCreateTask }) {
   const colors = useColors();

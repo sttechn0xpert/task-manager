@@ -4,7 +4,7 @@ import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { chakra } from "@chakra-ui/react";
 import { globalStyles } from "../common/theme/styles";
 import Task from "./Task";
-import { useColors } from "../common/hooks/color";
+import { useColors } from "../common/hooks/useColor";
 export const DraggableItem = ({ id, task, onEditTask }) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id,
