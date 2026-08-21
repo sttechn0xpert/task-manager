@@ -1,9 +1,10 @@
 import React from "react";
 import { chakra, useColorModeValue } from "@chakra-ui/react";
 import { CONSTANT } from "../utils/constant";
-import { useColors } from "../utils/color";
+import { useTasks } from "../common/context/TaskContext";
+import { useColors } from "../common/hooks/color";
 
-function Task({ task, onDeleteTask, onMarkComplete, onEditTask }) {
+function Task({ task, onEditTask }) {
   const color = useColors();
 
   function getStatusDetails() {
@@ -32,7 +33,7 @@ function Task({ task, onDeleteTask, onMarkComplete, onEditTask }) {
   }
 
   const status = getStatusDetails();
-
+  const { deleteTask, markTaskComplete } = useTasks();
   /*
    * Prevent action buttons from triggering
    * the drag event.
@@ -176,7 +177,7 @@ function Task({ task, onDeleteTask, onMarkComplete, onEditTask }) {
             }}
             onClick={(e) => {
               stopDrag(e);
-              onMarkComplete(task);
+              markTaskComplete(task.id);
             }}
           >
             ✓ Complete
@@ -201,7 +202,7 @@ function Task({ task, onDeleteTask, onMarkComplete, onEditTask }) {
           }}
           onClick={(e) => {
             stopDrag(e);
-            onDeleteTask(task);
+            deleteTask(task.id);
           }}
         >
           Delete

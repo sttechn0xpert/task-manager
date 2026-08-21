@@ -4,15 +4,7 @@ import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { chakra } from "@chakra-ui/react";
 import { globalStyles } from "../common/theme/styles";
 import Task from "./Task";
-export const DraggableItem = ({
-  id,
-  key,
-  onMarkComplete,
-  task,
-  stage,
-  onEditTask,
-  onDeleteTask,
-}) => {
+export const DraggableItem = ({ id, task, onEditTask }) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id,
     data: task,
@@ -39,12 +31,7 @@ export const DraggableItem = ({
       {...listeners}
       {...attributes}
     >
-      <Task
-        task={task}
-        onEditTask={onEditTask}
-        onDeleteTask={onDeleteTask}
-        onMarkComplete={onMarkComplete}
-      ></Task>
+      <Task task={task} onEditTask={onEditTask}></Task>
     </chakra.div>
   );
 };

@@ -1,6 +1,6 @@
 import { useDroppable } from "@dnd-kit/core";
 import { chakra } from "@chakra-ui/react";
-import { useColors } from "../utils/color";
+import { useColors } from "../common/hooks/color";
 
 export const DroppableContainer = ({ id, children, ...rest }) => {
   const { setNodeRef, isOver } = useDroppable({

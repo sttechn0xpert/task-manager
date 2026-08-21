@@ -18,7 +18,6 @@ import "./common/theme/globalStyle.css";
 import { ToastContainer, toast } from "react-toastify";
 
 import { CONSTANT } from "./utils/constant";
-import { mockData } from "./utils/mockData";
 
 import dottedMenu from "./common/images/dottedMenu.png";
 
@@ -26,57 +25,35 @@ import { DroppableContainer } from "./components/DroppableContainer";
 import Header from "./components/Header";
 import { DraggableItem } from "./components/DraggableItem";
 import { CreateTaskModal } from "./components/CreateTaskModal";
-import { useColors } from "./utils/color";
 import { StageMenu } from "./components/StageMenu";
 import useLocalStorage from "./common/hooks/useLocalStorage";
 import { useTasks } from "./common/context/TaskContext";
+import { useColors } from "./common/hooks/color";
 export default function App() {
   const inputRef = useRef(null);
   const colors = useColors();
-  const { tasks, deleteTask, markTaskComplete, updateTaskStatus } = useTasks();
-  /*
-   * Task modal
-   */
+  const {
+    tasks,
+    addTask,
+    updateTask,
+    deleteTask,
+    markTaskComplete,
+    updateTaskStatus,
+  } = useTasks();
+
   const [isCreateTaskInfo, setIsCreateTaskInfo] = useState({
     isTaskModalOpen: false,
     mode: "create",
     task: null,
   });
 
-  /*
-   * Tasks
-   */
-  const [tasks, setTasks] = useLocalStorage(
-    "taskManagerTasks",
-    mockData.taskData,
-  );
-  /*
-   * Status columns
-   *
-   * Keep "stage" naming here because your existing
-   * DroppableContainer UI already expects it.
-   *
-   * Visually/functionally these are now TASK STATUSES.
-   */
   const [statusList, setStatusList] = useState(CONSTANT.TaskStatusList);
 
-  /*
-   * Filter
-   *
-   * Assignment requirement:
-   * All / Completed / Pending
-   */
   const [taskFilter, setTaskFilter] = useState("all");
-
-  /*
-   * Stage menu state
-   */
-  const [openMenu, setOpenMenu] = useState(null);
 
   /*
    * Status editing
    */
-  const [editingStatus, setEditingStatus] = useState(null);
   const [editValue, setEditValue] = useState("");
   const [statusError, setStatusError] = useState({});
 
@@ -86,33 +63,19 @@ export default function App() {
    * -----------------------------
    */
   function handleCreateTask(data) {
-    setTasks((prev) => {
-      const exists = prev.some((task) => task.id === data.id);
+    const exists = tasks.some((task) => task.id === data.id);
 
-      /*
-       * Edit
-       */
-      if (exists) {
-        return prev.map((task) => (task.id === data.id ? data : task));
-      }
-
-      /*
-       * Create
-       *
-       * New task always starts as Pending.
-       */
-      return [
-        ...prev,
-        {
-          ...data,
-          status: "pending",
-        },
-      ];
-    });
-
-    toast.success(
-      data.id ? "Task saved successfully" : "Task created successfully",
-    );
+    if (exists) {
+      updateTask({
+        ...data,
+        status: data.status || "pending",
+      });
+    } else {
+      addTask({
+        ...data,
+        status: "pending",
+      });
+    }
   }
 
   /*
@@ -134,53 +97,26 @@ export default function App() {
    * -----------------------------
    */
   function handleDeleteTask(task) {
-    const updatedTasks = tasks.filter((item) => item.id !== task.id);
-
-    setTasks(updatedTasks);
-
-    toast.success("Task deleted successfully");
+    deleteTask(task.id);
   }
-
   /*
    * -----------------------------
    * Drag & Drop
    * -----------------------------
    *
-   * This is the important part.
-   *
    * When task is dragged into another status
    * column, its status changes.
    */
   function handleMarkComplete(task) {
-    setTasks((prev) =>
-      prev.map((item) =>
-        item.id === task.id
-          ? {
-              ...item,
-              status: "completed",
-            }
-          : item,
-      ),
-    );
-
-    toast.success("Task marked as completed");
+    markTaskComplete(task.id);
   }
   function handleDragEnd({ active, over }) {
     if (!over) return;
 
     const activeId = active.id;
 
-    /*
-     * If dropped on a task, get the task's status.
-     *
-     * If dropped directly on a column,
-     * get the column status.
-     */
     let newStatus = over.data.current?.stage;
 
-    /*
-     * If dropped on another task
-     */
     if (!newStatus) {
       const overTask = tasks.find((task) => task.id === over.id);
 
@@ -191,101 +127,15 @@ export default function App() {
 
     if (!newStatus) return;
 
-    /*
-     * Find dragged task
-     */
     const activeTask = tasks.find((task) => task.id === activeId);
 
     if (!activeTask) return;
 
-    /*
-     * Same status → nothing to change
-     */
     if (activeTask.status === newStatus) {
       return;
     }
 
-    /*
-     * Update task status
-     */
-    setTasks((prev) =>
-      prev.map((task) =>
-        task.id === activeId
-          ? {
-              ...task,
-              status: newStatus,
-            }
-          : task,
-      ),
-    );
-  }
-
-  /*
-   * -----------------------------
-   * Status edit
-   * -----------------------------
-   *
-   * We don't actually need custom
-   * status creation for the assignment.
-   *
-   * But keeping this makes your existing
-   * UI structure intact.
-   */
-  function statusChecker(status) {
-    const oldTitle = status.title;
-
-    const exists = statusList.some(
-      (item) =>
-        item.title.toLowerCase() === editValue.toLowerCase() &&
-        item.id !== status.id,
-    );
-
-    if (!editValue.trim() || exists) {
-      setEditValue(oldTitle);
-      setEditingStatus(null);
-
-      setStatusError((prev) => ({
-        ...prev,
-        [status.id]: false,
-      }));
-
-      return;
-    }
-
-    setStatusList((prev) =>
-      prev.map((item) =>
-        item.id === status.id
-          ? {
-              ...item,
-              title: editValue,
-            }
-          : item,
-      ),
-    );
-
-    setEditingStatus(null);
-  }
-
-  function statusHandler(e, status) {
-    const exists = statusList.some(
-      (item) =>
-        item.title.toLowerCase() === e.target.value.toLowerCase() &&
-        item.id !== status.id,
-    );
-
-    if (exists) {
-      toast.error("Status title already exists", {
-        position: "top-right",
-        autoClose: 3000,
-      });
-
-      setStatusError((prev) => ({
-        ...prev,
-        [status.id]: true,
-      }));
-    }
-
-    setEditValue(e.target.value);
+    updateTaskStatus(activeId, newStatus);
   }
 
   /*
@@ -339,7 +189,6 @@ export default function App() {
         <Header
           taskFilter={taskFilter}
           setTaskFilter={setTaskFilter}
-          taskStatusList={statusList}
           onCreateTask={() =>
             setIsCreateTaskInfo({
               isTaskModalOpen: true,
@@ -391,9 +240,6 @@ export default function App() {
           }}
         >
           {statusList.map((status) => {
-            /*
-             * Tasks belonging to this column
-             */
             const statusTasks = filteredTasks.filter(
               (task) => task.status === status.value,
             );
@@ -449,28 +295,6 @@ export default function App() {
                       {statusTasks.length}
                     </chakra.h3>
                   </Box>
-
-                  {/* Popup Menu */}
-                  {openMenu === status.id && (
-                    <StageMenu
-                      stage={status}
-                      onEdit={(item) => {
-                        setEditingStatus(item.id);
-                        setEditValue(item.title);
-                      }}
-                      onDelete={(item) => {
-                        /*
-                         * Do not allow deleting
-                         * the three required
-                         * task statuses.
-                         */
-                        toast.error("Default task statuses cannot be deleted.");
-
-                        setOpenMenu(null);
-                      }}
-                      onClose={() => setOpenMenu(null)}
-                    />
-                  )}
                 </Box>
 
                 {/* Divider */}
@@ -493,11 +317,8 @@ export default function App() {
                     <DraggableItem
                       key={task.id}
                       id={task.id}
-                      onMarkComplete={handleMarkComplete}
                       task={task}
-                      status={status}
                       onEditTask={handleEditTask}
-                      onDeleteTask={handleDeleteTask}
                     />
                   ))}
 

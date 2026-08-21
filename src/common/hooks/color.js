@@ -116,5 +116,51 @@ export function useColors() {
     scrollbarThumb: useColorModeValue("gray.300", "gray.600"),
 
     scrollbarThumbHover: useColorModeValue("gray.400", "gray.500"),
+
+    // =========================
+    // MODAL
+    // =========================
+    modalBg: useColorModeValue("white", "#171C28"),
+
+    modalBorder: useColorModeValue("gray.200", "gray.700"),
+
+    modalOverlay: useColorModeValue("blackAlpha.300", "blackAlpha.700"),
+
+    modalTitleColor: useColorModeValue("gray.800", "gray.100"),
+
+    // =========================
+    // MODAL FORM
+    // =========================
+    inputBg: useColorModeValue("white", "#1F2937"),
+
+    inputColor: useColorModeValue("gray.800", "gray.100"),
+
+    inputBorder: useColorModeValue("gray.300", "gray.600"),
+
+    inputHoverBorder: useColorModeValue("gray.400", "gray.500"),
+
+    inputFocusBorder: useColorModeValue("blue.400", "blue.400"),
+
+    placeholderColor: useColorModeValue("gray.400", "gray.500"),
+
+    // =========================
+    // MODAL CANCEL BUTTON
+    // =========================
+    cancelBg: useColorModeValue("white", "#171C28"),
+
+    cancelHoverBg: useColorModeValue("gray.100", "gray.700"),
+
+    // =========================
+    // ERROR
+    // =========================
+    error: useColorModeValue("red.500", "red.300"),
+    // =========================
+    // MODAL ACTIONS
+    // =========================
+    cancelBg: useColorModeValue("white", "#171C28"),
+
+    cancelHoverBg: useColorModeValue("gray.100", "gray.700"),
+
+    actionBorder: useColorModeValue("gray.200", "gray.600"),
   };
 }

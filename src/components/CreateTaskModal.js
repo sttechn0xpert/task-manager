@@ -15,12 +15,13 @@ import { useEffect, useState } from "react";
 import { taskValue } from "../utils/initialValues";
 import { globalStyles } from "../common/theme/styles";
 import { CONSTANT } from "../utils/constant";
+import { useColors } from "../common/hooks/color";
 
 export function CreateTaskModal({ isOpen, onClose, onSave, mode, task }) {
   const [errors, setErrors] = useState({});
   const [form, setForm] = useState(taskValue);
 
-  const colors = globalStyles.colors;
+  const colors = useColors();
 
   useEffect(() => {
     if (task && mode === "edit") {
@@ -99,10 +100,13 @@ export function CreateTaskModal({ isOpen, onClose, onSave, mode, task }) {
 
   return (
     <Modal isOpen={isOpen} onClose={closeHandler} isCentered>
-      <ModalOverlay />
+      <ModalOverlay bg={colors.modalOverlay} backdropFilter="blur(2px)" />
 
       <ModalContent
-        bg={colors.white}
+        bg={colors.modalBg}
+        color={colors.textColor}
+        border="1px solid"
+        borderColor={colors.modalBorder}
         borderRadius="12px"
         p={{ base: "20px", md: "24px" }}
         w={{ base: "90%", sm: "450px" }}
@@ -121,9 +125,20 @@ export function CreateTaskModal({ isOpen, onClose, onSave, mode, task }) {
               name="title"
               value={form.title}
               onChange={handleChange}
-              border={`1px solid ${
-                errors.title ? colors.error : colors.taskField
-              }`}
+              bg={colors.inputBg}
+              color={colors.inputColor}
+              border="1px solid"
+              borderColor={errors.title ? colors.error : colors.inputBorder}
+              _placeholder={{
+                color: colors.placeholderColor,
+              }}
+              _hover={{
+                borderColor: colors.inputHoverBorder,
+              }}
+              _focus={{
+                borderColor: colors.inputFocusBorder,
+                boxShadow: `0 0 0 1px ${colors.inputFocusBorder}`,
+              }}
             />
 
             {errors.title && (
@@ -140,13 +155,49 @@ export function CreateTaskModal({ isOpen, onClose, onSave, mode, task }) {
             value={form.description}
             onChange={handleChange}
             minH="100px"
+            bg={colors.inputBg}
+            color={colors.inputColor}
+            border="1px solid"
+            borderColor={colors.inputBorder}
+            _placeholder={{
+              color: colors.placeholderColor,
+            }}
+            _hover={{
+              borderColor: colors.inputHoverBorder,
+            }}
+            _focus={{
+              borderColor: colors.inputFocusBorder,
+              boxShadow: `0 0 0 1px ${colors.inputFocusBorder}`,
+            }}
           />
 
           {/* Status - Edit only */}
           {mode === "edit" && (
-            <Select name="status" value={form.status} onChange={handleChange}>
+            <Select
+              name="status"
+              value={form.status}
+              onChange={handleChange}
+              bg={colors.inputBg}
+              color={colors.inputColor}
+              border="1px solid"
+              borderColor={colors.inputBorder}
+              _hover={{
+                borderColor: colors.inputHoverBorder,
+              }}
+              _focus={{
+                borderColor: colors.inputFocusBorder,
+                boxShadow: `0 0 0 1px ${colors.inputFocusBorder}`,
+              }}
+            >
               {CONSTANT.TaskStatusList.map((status) => (
-                <option key={status.id} value={status.value}>
+                <option
+                  key={status.id}
+                  value={status.value}
+                  style={{
+                    background: colors.inputBg,
+                    color: colors.inputColor,
+                  }}
+                >
                   {status.title}
                 </option>
               ))}
@@ -155,23 +206,39 @@ export function CreateTaskModal({ isOpen, onClose, onSave, mode, task }) {
         </ModalBody>
 
         <ModalFooter display="flex" gap="12px" justifyContent="flex-end">
-          <Button onClick={closeHandler} variant="outline">
+          {/* Cancel */}
+          <Button
+            onClick={closeHandler}
+            bg={colors.cancelBg}
+            color={colors.textColor}
+            border="1px solid"
+            borderColor={colors.actionBorder}
+            borderRadius="8px"
+            _hover={{
+              bg: colors.cancelHoverBg,
+            }}
+          >
             Cancel
           </Button>
 
+          {/* Save / Add */}
           <chakra.button
             padding="8px 16px"
             border="1px solid"
-            borderColor={colors.primaryBtn}
-            background={colors.primaryBtn}
+            borderColor={colors.secondaryBtn}
+            background={colors.secondaryBtn}
             color={colors.white}
             fontWeight="500"
             fontSize="16px"
             cursor="pointer"
             borderRadius="8px"
             onClick={handleSave}
+            transition="all 0.2s ease"
             _hover={{
-              background: colors.primaryHover,
+              background: colors.secondaryHover,
+            }}
+            _active={{
+              transform: "translateY(1px)",
             }}
           >
             {mode === "create" ? "Add Task" : "Save Changes"}
