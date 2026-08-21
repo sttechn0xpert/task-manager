@@ -17,9 +17,9 @@ export const CONSTANT = {
     noNotesAdded: "No notes added",
     createTask: "Create Task",
     editTask: "Edit Task",
-    taskName: "Task Title",
+    taskName: "Title",
     save: "Save",
-    titleNameError: "Task title is required",
+    titleNameError: "Title is required",
   },
 
   TaskStatusList: [

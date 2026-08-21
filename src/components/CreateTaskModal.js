@@ -117,7 +117,7 @@ export function CreateTaskModal({ isOpen, onClose, onSave, mode, task }) {
             {/* Task Title */}
             <div>
               <Input
-                placeholder="Enter task title"
+                placeholder="Enter title"
                 name="title"
                 value={form.title}
                 onChange={handleChange}
@@ -146,7 +146,7 @@ export function CreateTaskModal({ isOpen, onClose, onSave, mode, task }) {
 
             {/* Description */}
             <Textarea
-              placeholder="Enter task description (optional)"
+              placeholder="Enter description (optional)"
               name="description"
               value={form.description}
               onChange={handleChange}
