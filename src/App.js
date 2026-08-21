@@ -10,7 +10,12 @@ import {
 
 import system from "./common/theme/theme";
 
-import { DndContext } from "@dnd-kit/core";
+import {
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import { chakra } from "@chakra-ui/react";
 
 import "./common/theme/globalStyle.css";
@@ -41,6 +46,13 @@ export default function App() {
     reorderTasks,
   } = useTasks();
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+  );
   const [isCreateTaskInfo, setIsCreateTaskInfo] = useState({
     isTaskModalOpen: false,
     mode: "create",
@@ -290,7 +302,7 @@ export default function App() {
   }
 
   return (
-    <DndContext onDragEnd={handleDragEnd}>
+    <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
       <Box minH="100vh" bg={colors.pageBg} color={colors.textColor}>
         <ToastContainer />
 
