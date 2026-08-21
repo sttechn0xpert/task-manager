@@ -27,7 +27,7 @@ export const DroppableContainer = ({ id, children, ...rest }) => {
     <chakra.div
       ref={setNodeRef}
       flex="1"
-      minW={{ base: "280px", md: "0" }}
+      minW={{ base: "280px", sm: "360px", md: "360px" }}
       borderRadius="14px"
       border="1px solid"
       bg={columnColors?.bg || colors.columnBg}

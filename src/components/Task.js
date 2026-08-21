@@ -137,6 +137,7 @@ function Task({ task, onEditTask }) {
         {task.status !== "completed" && (
           <chakra.button
             flex="1"
+            flexShrink="0"
             py="7px"
             px="8px"
             bg="transparent"
@@ -163,6 +164,8 @@ function Task({ task, onEditTask }) {
           <chakra.button
             flex="1"
             py="7px"
+            flexShrink="0"
+            whiteSpace="nowrap"
             px="8px"
             bg="transparent"
             border="1px solid"
@@ -189,6 +192,7 @@ function Task({ task, onEditTask }) {
           flex="1"
           py="7px"
           px="8px"
+          flexShrink="0"
           bg="transparent"
           border="1px solid"
           borderColor={color.actionBorder}

@@ -50,13 +50,13 @@ export default function App() {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8,
+        distance: 5,
       },
     }),
 
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 250,
+        delay: 20,
         tolerance: 5,
       },
     }),
