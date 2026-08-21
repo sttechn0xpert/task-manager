@@ -45,7 +45,6 @@ function Task({ task, onEditTask }) {
   return (
     <chakra.div
       p="16px"
-      touchAction="none"
       userSelect="none"
       minH="230px"
       bg={color.cardBg}
@@ -62,7 +61,6 @@ function Task({ task, onEditTask }) {
 
       <chakra.div
         display="flex"
-        userSelect="none"
         justifyContent="space-between"
         alignItems="flex-start"
         gap="10px"
