@@ -47,6 +47,7 @@ function Task({ task, onEditTask }) {
       p="16px"
       minH="230px"
       bg={color.cardBg}
+      userSelect="none"
       borderRadius="8px"
       border="1px solid"
       borderColor={color.dividerColor}
