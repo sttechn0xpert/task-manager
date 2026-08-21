@@ -162,5 +162,6 @@ export function useColors() {
     cancelHoverBg: useColorModeValue("gray.100", "gray.700"),
 
     actionBorder: useColorModeValue("gray.200", "gray.600"),
+    dragItemBg: useColorModeValue("transparent", "transparent"),
   };
 }

@@ -25,7 +25,6 @@ import { DroppableContainer } from "./components/DroppableContainer";
 import Header from "./components/Header";
 import { DraggableItem } from "./components/DraggableItem";
 import { CreateTaskModal } from "./components/CreateTaskModal";
-import { StageMenu } from "./components/StageMenu";
 import useLocalStorage from "./common/hooks/useLocalStorage";
 import { useTasks } from "./common/context/TaskContext";
 import { useColors } from "./common/hooks/color";

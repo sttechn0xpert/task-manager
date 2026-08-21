@@ -13,7 +13,6 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { taskValue } from "../utils/initialValues";
-import { globalStyles } from "../common/theme/styles";
 import { CONSTANT } from "../utils/constant";
 import { useColors } from "../common/hooks/color";
 
@@ -68,7 +67,9 @@ export function CreateTaskModal({ isOpen, onClose, onSave, mode, task }) {
     return Object.keys(temp).length === 0;
   }
 
-  function handleSave() {
+  function handleSave(e) {
+    e.preventDefault();
+
     if (!validateForm()) return;
 
     if (mode === "edit") {
@@ -83,8 +84,6 @@ export function CreateTaskModal({ isOpen, onClose, onSave, mode, task }) {
         id: "task_" + crypto.randomUUID(),
         title: form.title.trim(),
         description: form.description.trim(),
-
-        // New tasks always start as Pending
         status: "pending",
       });
     }
@@ -117,18 +116,49 @@ export function CreateTaskModal({ isOpen, onClose, onSave, mode, task }) {
             : CONSTANT.tasks.editTask}
         </ModalHeader>
 
-        <ModalBody display="flex" flexDirection="column" gap="12px">
-          {/* Task Title */}
-          <div>
-            <Input
-              placeholder="Enter task title"
-              name="title"
-              value={form.title}
+        <chakra.form onSubmit={handleSave}>
+          <ModalBody display="flex" flexDirection="column" gap="12px">
+            {/* Task Title */}
+            <div>
+              <Input
+                placeholder="Enter task title"
+                name="title"
+                value={form.title}
+                onChange={handleChange}
+                bg={colors.inputBg}
+                color={colors.inputColor}
+                border="1px solid"
+                borderColor={errors.title ? colors.error : colors.inputBorder}
+                _placeholder={{
+                  color: colors.placeholderColor,
+                }}
+                _hover={{
+                  borderColor: colors.inputHoverBorder,
+                }}
+                _focus={{
+                  borderColor: colors.inputFocusBorder,
+                  boxShadow: `0 0 0 1px ${colors.inputFocusBorder}`,
+                }}
+              />
+
+              {errors.title && (
+                <chakra.p color={colors.error} fontSize="12px" mt="4px">
+                  {errors.title}
+                </chakra.p>
+              )}
+            </div>
+
+            {/* Description */}
+            <Textarea
+              placeholder="Enter task description (optional)"
+              name="description"
+              value={form.description}
               onChange={handleChange}
+              minH="100px"
               bg={colors.inputBg}
               color={colors.inputColor}
               border="1px solid"
-              borderColor={errors.title ? colors.error : colors.inputBorder}
+              borderColor={colors.inputBorder}
               _placeholder={{
                 color: colors.placeholderColor,
               }}
@@ -141,109 +171,81 @@ export function CreateTaskModal({ isOpen, onClose, onSave, mode, task }) {
               }}
             />
 
-            {errors.title && (
-              <chakra.p color="red" fontSize="12px" mt="4px">
-                {errors.title}
-              </chakra.p>
+            {/* Status - Edit only */}
+            {mode === "edit" && (
+              <Select
+                name="status"
+                value={form.status}
+                onChange={handleChange}
+                bg={colors.inputBg}
+                color={colors.inputColor}
+                border="1px solid"
+                borderColor={colors.inputBorder}
+                _hover={{
+                  borderColor: colors.inputHoverBorder,
+                }}
+                _focus={{
+                  borderColor: colors.inputFocusBorder,
+                  boxShadow: `0 0 0 1px ${colors.inputFocusBorder}`,
+                }}
+              >
+                {CONSTANT.TaskStatusList.map((status) => (
+                  <option
+                    key={status.id}
+                    value={status.value}
+                    style={{
+                      background: colors.inputBg,
+                      color: colors.inputColor,
+                    }}
+                  >
+                    {status.title}
+                  </option>
+                ))}
+              </Select>
             )}
-          </div>
+          </ModalBody>
 
-          {/* Description */}
-          <Textarea
-            placeholder="Enter task description (optional)"
-            name="description"
-            value={form.description}
-            onChange={handleChange}
-            minH="100px"
-            bg={colors.inputBg}
-            color={colors.inputColor}
-            border="1px solid"
-            borderColor={colors.inputBorder}
-            _placeholder={{
-              color: colors.placeholderColor,
-            }}
-            _hover={{
-              borderColor: colors.inputHoverBorder,
-            }}
-            _focus={{
-              borderColor: colors.inputFocusBorder,
-              boxShadow: `0 0 0 1px ${colors.inputFocusBorder}`,
-            }}
-          />
-
-          {/* Status - Edit only */}
-          {mode === "edit" && (
-            <Select
-              name="status"
-              value={form.status}
-              onChange={handleChange}
-              bg={colors.inputBg}
-              color={colors.inputColor}
+          <ModalFooter display="flex" gap="12px" justifyContent="flex-end">
+            {/* Cancel */}
+            <Button
+              type="button"
+              onClick={closeHandler}
+              bg={colors.cancelBg}
+              color={colors.textColor}
               border="1px solid"
-              borderColor={colors.inputBorder}
+              borderColor={colors.actionBorder}
+              borderRadius="8px"
               _hover={{
-                borderColor: colors.inputHoverBorder,
-              }}
-              _focus={{
-                borderColor: colors.inputFocusBorder,
-                boxShadow: `0 0 0 1px ${colors.inputFocusBorder}`,
+                bg: colors.cancelHoverBg,
               }}
             >
-              {CONSTANT.TaskStatusList.map((status) => (
-                <option
-                  key={status.id}
-                  value={status.value}
-                  style={{
-                    background: colors.inputBg,
-                    color: colors.inputColor,
-                  }}
-                >
-                  {status.title}
-                </option>
-              ))}
-            </Select>
-          )}
-        </ModalBody>
+              Cancel
+            </Button>
 
-        <ModalFooter display="flex" gap="12px" justifyContent="flex-end">
-          {/* Cancel */}
-          <Button
-            onClick={closeHandler}
-            bg={colors.cancelBg}
-            color={colors.textColor}
-            border="1px solid"
-            borderColor={colors.actionBorder}
-            borderRadius="8px"
-            _hover={{
-              bg: colors.cancelHoverBg,
-            }}
-          >
-            Cancel
-          </Button>
-
-          {/* Save / Add */}
-          <chakra.button
-            padding="8px 16px"
-            border="1px solid"
-            borderColor={colors.secondaryBtn}
-            background={colors.secondaryBtn}
-            color={colors.white}
-            fontWeight="500"
-            fontSize="16px"
-            cursor="pointer"
-            borderRadius="8px"
-            onClick={handleSave}
-            transition="all 0.2s ease"
-            _hover={{
-              background: colors.secondaryHover,
-            }}
-            _active={{
-              transform: "translateY(1px)",
-            }}
-          >
-            {mode === "create" ? "Add Task" : "Save Changes"}
-          </chakra.button>
-        </ModalFooter>
+            {/* Submit */}
+            <chakra.button
+              type="submit"
+              padding="8px 16px"
+              border="1px solid"
+              borderColor={colors.secondaryBtn}
+              background={colors.secondaryBtn}
+              color={colors.white}
+              fontWeight="500"
+              fontSize="16px"
+              cursor="pointer"
+              borderRadius="8px"
+              transition="all 0.2s ease"
+              _hover={{
+                background: colors.secondaryHover,
+              }}
+              _active={{
+                transform: "translateY(1px)",
+              }}
+            >
+              {mode === "create" ? "Add Task" : "Save Changes"}
+            </chakra.button>
+          </ModalFooter>
+        </chakra.form>
       </ModalContent>
     </Modal>
   );

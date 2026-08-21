@@ -1,5 +1,3 @@
-import { globalStyles } from "../common/theme/styles";
-
 export const CONSTANT = {
   common: {
     appTitle: "Task Manager App",
