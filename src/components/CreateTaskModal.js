@@ -24,11 +24,7 @@ export function CreateTaskModal({ isOpen, onClose, onSave, mode, task }) {
 
   useEffect(() => {
     if (task && mode === "edit") {
-      setForm({
-        title: task.title || "",
-        description: task.description || "",
-        status: task.status || "pending",
-      });
+      setForm(task);
     } else {
       setForm({
         ...taskValue,

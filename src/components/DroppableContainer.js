@@ -7,9 +7,6 @@ export const DroppableContainer = ({ id, children, ...rest }) => {
     id,
     data: rest,
   });
-  console.log("====================================");
-  console.log(rest, "restrest");
-  console.log("====================================");
   const colors = useColors();
   const columnColors = {
     pending: {

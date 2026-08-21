@@ -67,6 +67,11 @@ export function TaskProvider({ children }) {
     toast.success("Task status updated");
   }
 
+  // Reorder tasks and persist the new order
+  function reorderTasks(updatedTasks) {
+    setTasks(updatedTasks);
+  }
+
   return (
     <TaskContext.Provider
       value={{
@@ -76,6 +81,7 @@ export function TaskProvider({ children }) {
         deleteTask,
         markTaskComplete,
         updateTaskStatus,
+        reorderTasks,
       }}
     >
       {children}

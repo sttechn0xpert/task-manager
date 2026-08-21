@@ -38,6 +38,7 @@ export default function App() {
     deleteTask,
     markTaskComplete,
     updateTaskStatus,
+    reorderTasks,
   } = useTasks();
 
   const [isCreateTaskInfo, setIsCreateTaskInfo] = useState({
@@ -113,42 +114,152 @@ export default function App() {
     if (!over) return;
 
     const activeId = active.id;
+    const overId = over.id;
 
-    let newStatus = over.data.current?.stage;
+    const activeTask = tasks.find((task) => task.id === activeId);
+    const overTask = tasks.find((task) => task.id === overId);
 
+    if (!activeTask) return;
+
+    // Same task
+    if (activeTask?.id === overTask?.id) return;
+
+    /*
+     * ==========================================
+     * SAME COLUMN
+     * ==========================================
+     */
+    if (activeTask && overTask && activeTask.status === overTask.status) {
+      const newTasks = [...tasks];
+
+      // Tasks belonging to this status
+      const statusTasks = newTasks.filter(
+        (task) => task.status === activeTask.status,
+      );
+
+      const oldIndex = statusTasks.findIndex((task) => task.id === activeId);
+
+      const newIndex = statusTasks.findIndex((task) => task.id === overId);
+
+      if (oldIndex === -1 || newIndex === -1) return;
+
+      // Remove from old position
+      statusTasks.splice(oldIndex, 1);
+
+      // Insert at dropped position
+      statusTasks.splice(newIndex, 0, activeTask);
+
+      /*
+       * Put reordered status tasks back into
+       * the complete tasks array.
+       */
+      const updatedTasks = newTasks.map((task) => {
+        if (task.status === activeTask.status) {
+          return statusTasks.shift();
+        }
+
+        return task;
+      });
+
+      reorderTasks(updatedTasks);
+
+      return;
+    }
+
+    /*
+     * ==========================================
+     * DIFFERENT COLUMN
+     * ==========================================
+     */
+
+    // If dropped on another task,
+    // use that task's status.
+    let newStatus = overTask?.status;
+    // If dropped directly on the column,
+    // get status from column droppable data.
     if (!newStatus) {
-      const overTask = tasks.find((task) => task.id === over.id);
-
-      if (overTask) {
-        newStatus = overTask.status;
-      }
+      newStatus = over.data.current?.stage;
     }
 
     if (!newStatus) return;
 
-    const activeTask = tasks.find((task) => task.id === activeId);
+    /*
+     * If dropped on a task in another column,
+     * insert at THAT TASK'S INDEX.
+     */
+    if (overTask) {
+      const newTasks = [...tasks];
 
-    if (!activeTask) return;
+      // Remove active task from its current position
+      const activeIndex = newTasks.findIndex((task) => task.id === activeId);
 
-    if (activeTask.status === newStatus) {
+      newTasks.splice(activeIndex, 1);
+
+      // Find all tasks in target status AFTER removal
+      const targetTasks = newTasks.filter((task) => task.status === newStatus);
+
+      // Find the target task's position
+      const targetIndex = targetTasks.findIndex((task) => task.id === overId);
+
+      /*
+       * Create the moved task with new status.
+       */
+      const movedTask = {
+        ...activeTask,
+        status: newStatus,
+      };
+
+      /*
+       * Insert moved task into target status
+       * at the exact dropped position.
+       */
+      targetTasks.splice(targetIndex, 0, movedTask);
+
+      /*
+       * Rebuild complete task list while
+       * preserving other statuses.
+       */
+      let targetTaskIndex = 0;
+
+      const updatedTasks = newTasks.map((task) => {
+        if (task.status === newStatus) {
+          return targetTasks[targetTaskIndex++];
+        }
+
+        return task;
+      });
+
+      /*
+       * If target status was empty / something
+       * unexpected happened, fallback.
+       */
+      if (targetTaskIndex !== targetTasks.length) {
+        updatedTasks.push(...targetTasks.slice(targetTaskIndex));
+      }
+
+      reorderTasks(updatedTasks);
+
       return;
     }
 
-    updateTaskStatus(activeId, newStatus);
+    /*
+     * ==========================================
+     * DROPPED DIRECTLY ON COLUMN
+     * ==========================================
+     */
+
+    const updatedTasks = tasks.map((task) =>
+      task.id === activeId
+        ? {
+            ...task,
+            status: newStatus,
+          }
+        : task,
+    );
+
+    reorderTasks(updatedTasks);
   }
 
-  /*
-   * -----------------------------
-   * Filter tasks
-   * -----------------------------
-   *
-   * All
-   * Completed
-   * Pending
-   *
-   * In Progress is considered Pending
-   * for the assignment filter.
-   */
   function getFilteredTasks() {
     if (taskFilter === "completed") {
       return tasks.filter((task) => task.status === "completed");
