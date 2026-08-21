@@ -62,7 +62,6 @@ function Task({ task, onEditTask }) {
 
       <chakra.div
         display="flex"
-        touchAction="none"
         userSelect="none"
         justifyContent="space-between"
         alignItems="flex-start"
@@ -99,7 +98,6 @@ function Task({ task, onEditTask }) {
       {/* ================= DESCRIPTION ================= */}
 
       <chakra.p
-        touchAction="none"
         userSelect="none"
         fontSize="13px"
         fontWeight="500"
@@ -125,7 +123,7 @@ function Task({ task, onEditTask }) {
 
       {/* ================= SPACER ================= */}
 
-      <chakra.div flex="1" userSelect="none" touchAction="none" />
+      <chakra.div flex="1" userSelect="none" />
 
       {/* ================= ACTIONS ================= */}
 
